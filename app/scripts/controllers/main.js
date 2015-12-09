@@ -15,5 +15,13 @@ angular.module('gmapPluginApp')
     $scope.clusterOptions = {};
     $scope.markerOptions ={icon: "http://wpdev.wcregroup.com/wp-content/uploads/2015/11/wcre-logo-marker-04.png"}
 
+    $scope.minFilterFn = function(actual, expected){
+      return parseInt(actual.size) >= parseInt(expected);
+    }
+
+    $scope.maxFilterFn = function(actual, expected){
+      return parseInt(actual.size) <= parseInt(expected);
+    }
+
 
   });
