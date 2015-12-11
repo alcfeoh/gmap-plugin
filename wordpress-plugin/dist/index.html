@@ -1,37 +1,5 @@
-<!doctype html> <html class="no-js"> <head> <meta charset="utf-8"> <title></title> <meta name="description" content=""> <meta name="viewport" content="width=device-width"> <!-- Place favicon.ico and apple-touch-icon.png in the root directory --> <link rel="stylesheet" href="styles/main.998fe460.css"> <style type="text/css">html, body, #map_canvas {
-        height: 100%;
-        width: 100%;
-        margin: 0px;
-      }
-
-      #map_canvas {
-        position: relative;
-      }
-
-      .angular-google-map-container {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        right: 0;
-        left: 0;
-      }</style>  <body ng-app="gmapPluginApp"> <!--[if lt IE 7]>
+<!doctype html> <html class="no-js"> <head> <meta charset="utf-8"> <title></title> <meta name="description" content=""> <meta name="viewport" content="width=device-width"> <!-- Place favicon.ico and apple-touch-icon.png in the root directory --> <link rel="stylesheet" href="styles/vendor.0eb12b9f.css"> <link rel="stylesheet" href="styles/main.c256448e.css">  <body> <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-    <![endif]--> <!-- Add your site or application content here --> <!--    <div class="header">
-      <div class="navbar navbar-default" role="navigation">
-        <div class="container">
-           <div class="collapse">
-            <ul class="nav navbar-nav">
-              <li class="active"><a href="#/">Home</a></li>
-              <li><a ng-href="#/about">About</a></li>
-              <li><a ng-href="#/">Contact</a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>--> <div class="container"> <div ng-view=""></div> </div> <!-- Google Analytics: change UA-XXXXX-X to be your site's ID --> <script>!function(A,n,g,u,l,a,r){A.GoogleAnalyticsObject=l,A[l]=A[l]||function(){
-       (A[l].q=A[l].q||[]).push(arguments)},A[l].l=+new Date,a=n.createElement(g),
-       r=n.getElementsByTagName(g)[0],a.src=u,r.parentNode.insertBefore(a,r)
-       }(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-       ga('create', 'UA-XXXXX-X');
-       ga('send', 'pageview');</script> <script src="scripts/vendor.df35a56f.js"></script> <script src="http://google-maps-utility-library-v3.googlecode.com/svn/tags/markerclustererplus/2.0.16/src/markerclusterer_packed.js"></script> <script src="bower_components\lodash\lodash.min.js"></script> <script src="bower_components\angular-google-maps\dist\angular-google-maps.min.js"></script> <script src="scripts/scripts.bb3c3d71.js"></script>  
+    <![endif]--> <div ng-app="gmapPluginApp" ng-controller="MainCtrl" class="grid"> <div class="unit one-quarter filters"> <div> Type: <select ng-options="location.type as location.type for location in locations" ng-model="typeFilter"> <option value="">--- Select type --- </select> </div> <div> Offer Type: <select ng-options="location.offer as location.offer for location in locations" ng-model="offerFilter"> <option value="">--- Select offer type --- </select> </div> <div> City: <input type="text" ng-model="cityFilter" placeholder="Type city name here"> </div> <div> Zipcode: <input type="text" ng-model="zipFilter" placeholder="Type zipcode here"> </div> <div> State: <select ng-options="location.state as location.state for location in locations" ng-model="stateFilter"> <option value="">--- Select state --- </select> </div> <div> Size: <input type="text" ng-model="minSizeFilter" placeholder="Min" class="sqft"> sqft and <input type="text" ng-model="maxSizeFilter" placeholder="Max" class="sqft"> sqft </div> </div> <div class="unit three-quarters"> <div id="map_canvas" style="height: 500px"> <ui-gmap-google-map center="mapConf.center" zoom="mapConf.zoom" control="map"> <ui-gmap-markers models="locations | filter: {type: typeFilter, offer: offerFilter, city: cityFilter, state: stateFilter, zipcode: zipFilter}
+                                            | filter: minSizeFilter:minFilterFn
+                                            | filter: maxSizeFilter:maxFilterFn" coords="'self'" idkey="'$id'" type="'cluster'" typeoptions="clusterOptions" options="markerOptions"> </ui-gmap-markers> </ui-gmap-google-map> </div> </div> </div> <script src="scripts/vendor.cffe057a.js"></script> <script src="http://google-maps-utility-library-v3.googlecode.com/svn/tags/markerclustererplus/2.0.16/src/markerclusterer_packed.js"></script> <script src="scripts/scripts.7e860a97.js"></script>  
