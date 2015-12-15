@@ -16,21 +16,37 @@ angular.module('gmapPluginApp')
     $scope.clusterOptions = {};
     $scope.markerOptions ={icon: "http://wpdev.wcregroup.com/wp-content/uploads/2015/11/wcre-logo-marker-04.png"};
     $scope.map = {};
+    var geocoder;
 
-    $timeout(geocodeIfNeeded, 1000);
+    //$timeout(geocodeIfNeeded, 1000);
 
     function geocodeIfNeeded() {
-      var geocoder = new google.maps.Geocoder();
+      geocoder = new google.maps.Geocoder();
+      var i = 0;
+      angular.forEach(locations, function(loc){
+        if (! loc.latitude){
+          $timeout(function() {
+            geocodeAddress(loc.address + "," + loc.city + "," + loc.zipcode + ",USA", function (result) {
+              loc.latitude = result.lat();
+              loc.longitude = result.lng();
+              locations.$save(loc);
+              console.log("Done for " + loc.name);
+            })
+          }, i * 100);
+          i++;
+        }
+      });
     }
 
     function geocodeAddress(address, callback) {
-      geocoder.geocode( { 'address': address}, function(results, status) {
-        if (status == google.maps.GeocoderStatus.OK) {
-          callback(results[0].geometry.location);
-        } else {
-          alert("Geocode was not successful for the following reason: " + status);
-        }
-      });
+        geocoder.geocode( { 'address': address}, function(results, status) {
+          if (status == google.maps.GeocoderStatus.OK) {
+            console.log("OK for "+ address);
+            callback(results[0].geometry.location);
+          } else {
+            console.error("Geocode was not successful for the following reason: " + status);
+          }
+        });
     }
 
     $scope.minFilterFn = function(actual, expected){
