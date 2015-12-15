@@ -16,6 +16,15 @@ angular.module('gmapPluginApp')
     $scope.clusterOptions = {};
     $scope.markerOptions ={icon: "http://wpdev.wcregroup.com/wp-content/uploads/2015/11/wcre-logo-marker-04.png"};
     $scope.map = {};
+    $scope.windowOptions = {visible: false};
+    $scope.window = {
+      marker: {},
+      show: false,
+        closeClick: function() {
+          this.show = false;
+        },
+      options: {} // define when map is ready
+    }
     var geocoder;
 
     //$timeout(geocodeIfNeeded, 1000);
@@ -32,7 +41,7 @@ angular.module('gmapPluginApp')
               locations.$save(loc);
               console.log("Done for " + loc.name);
             })
-          }, i * 100);
+          }, i * 200);
           i++;
         }
       });
@@ -47,6 +56,12 @@ angular.module('gmapPluginApp')
             console.error("Geocode was not successful for the following reason: " + status);
           }
         });
+    }
+
+    $scope.onClick = function(marker, eventName, model) {
+      debugger;
+      $scope.window.model = model;
+      $scope.window.show = true;
     }
 
     $scope.minFilterFn = function(actual, expected){

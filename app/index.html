@@ -57,12 +57,20 @@
       </div>
       <div class="unit three-quarters">
         <div id="map_canvas" style="height: 500px">
+
           <ui-gmap-google-map center="mapConf.center" zoom="mapConf.zoom" control="map">
+            <ui-gmap-window show="window.show" coords="window.model" options="window.options" closeclick="window.closeClick()">
+              <div>
+                {{window.model.name}}<BR>
+                {{window.model.address}}, {{window.model.city}}, {{window.model.state}}<BR>
+              </div>
+            </ui-gmap-window>
             <ui-gmap-markers models="locations | filter: {type: typeFilter, offer: offerFilter, city: cityFilter, state: stateFilter, zipcode: zipFilter}
                                             | filter: minSizeFilter:minFilterFn
-                                            | filter: maxSizeFilter:maxFilterFn"
+                                            | filter: maxSizeFilter:maxFilterFn
+                                            | filter: {show : true}"
                              coords="'self'" idkey="'$id'"  type="'cluster'" typeOptions="clusterOptions"
-                             options="markerOptions">
+                             options="markerOptions" click="onClick" >
             </ui-gmap-markers>
 
           </ui-gmap-google-map>
