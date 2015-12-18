@@ -20,63 +20,80 @@
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
 
-
-    <div ng-app="gmapPluginApp" ng-controller="MainCtrl" class="grid">
+  <div ng-app="gmapPluginApp" ng-controller="MainCtrl">
+    <div class="grid">
       <div class="unit one-quarter filters">
         <div>
           Type:
-          <select ng-options="location.type as location.type for location in locations" ng-model="typeFilter">
+          <select ng-options="location.type as location.type for location in locations | unique: 'type' | orderBy: 'type'" ng-model="filter.type">
             <option value="">--- Select type ---</option>
           </select>
         </div>
         <div>
-          Offer Type:
-          <select ng-options="location.offer as location.offer for location in locations" ng-model="offerFilter">
+          Offer:
+          <select ng-options="location.offer as location.offer for location in locations | unique: 'offer'" ng-model="filter.offer">
             <option value="">--- Select offer type ---</option>
           </select>
         </div>
         <div>
           City:
-          <input type="text" ng-model="cityFilter" placeholder="Type city name here"></input>
+          <input type="text" ng-model="filter.city" placeholder="Type city name here"></input>
         </div>
         <div>
           Zipcode:
-          <input type="text" ng-model="zipFilter" placeholder="Type zipcode here"></input>
+          <input type="text" ng-model="filter.zip" placeholder="Type zipcode here"></input>
         </div>
         <div>
           State:
-          <select ng-options="location.state as location.state for location in locations" ng-model="stateFilter">
+          <select ng-options="location.state as location.state for location in locations | unique: 'state' | orderBy: 'state'" ng-model="filter.state">
             <option value="">--- Select state ---</option>
           </select>
         </div>
         <div>
           Size:
-          <input type="text" ng-model="minSizeFilter" placeholder="Min" class="sqft"></input>
-          sqft and <input type="text" ng-model="maxSizeFilter" placeholder="Max" class="sqft"></input> sqft
+          <input type="text" ng-model="filter.minSize" placeholder="Min" class="sqft"></input>
+          sqft and <input type="text" ng-model="filter.maxSize" placeholder="Max" class="sqft"></input> sqft
+        </div>
+        <div>
+          <button ng-click="resetFilters()">Reset filters</button>
         </div>
       </div>
       <div class="unit three-quarters">
         <div id="map_canvas" style="height: 500px">
 
           <ui-gmap-google-map center="mapConf.center" zoom="mapConf.zoom" control="map">
-            <ui-gmap-window show="window.show" coords="window.model" options="window.options" closeclick="window.closeClick()">
+            <ui-gmap-window show="window.show" coords="window.model" options="window.options" closeclick="window.closeClick()" ng-if="window.model.name">
               <div>
                 {{window.model.name}}<BR>
                 {{window.model.address}}, {{window.model.city}}, {{window.model.state}}<BR>
               </div>
             </ui-gmap-window>
-            <ui-gmap-markers models="locations | filter: {type: typeFilter, offer: offerFilter, city: cityFilter, state: stateFilter, zipcode: zipFilter}
-                                            | filter: minSizeFilter:minFilterFn
-                                            | filter: maxSizeFilter:maxFilterFn
+            <ui-gmap-markers models="locations | filter: {type: filter.type, offer: filter.offer, city: filter.city, state: filter.state}
+                                            | filter: filter.minSize:minFilterFn
+                                            | filter: filter.maxSize:maxFilterFn
                                             | filter: {show : true}"
                              coords="'self'" idkey="'$id'"  type="'cluster'" typeOptions="clusterOptions"
-                             options="markerOptions" click="onClick" >
+                             options="markerOptions" click="onClick" control="markerControl">
             </ui-gmap-markers>
 
           </ui-gmap-google-map>
         </div>
       </div>
     </div>
+    <div style="overflow-x:auto;overflow-y:hidden;height:250px;padding:5px;">
+        <div style="display: table-cell; min-width: 200px;" ng-click="selectMarker(location.$id)"
+             ng-repeat="location in locations | filter: {type: filter.type, offer: filter.offer, city: filter.city, state: filter.state}
+                                            | filter: filter.minSize:minFilterFn
+                                            | filter: filter.maxSize:maxFilterFn
+                                            | filter: {show : true}">
+          <p><a ng-href="{{location.url}}">{{location.name}}</a></p>
+          <p>{{location.address}}<br>
+            {{location.city}}, {{location.state}}, {{location.zipcode}}
+          </p>
+          <img ng-src="{{location.img}}" style="max-width:150px;max-height: 100px;" />
+        </div>
+    </div>
+  </div>
 
     <!-- build:js(.) scripts/vendor.js -->
     <!-- bower:js -->
@@ -102,6 +119,7 @@
         <script src="scripts/controllers/main.js"></script>
         <script src="scripts/controllers/about.js"></script>
         <script src="scripts/services/locations.js"></script>
+        <script src="scripts/filters/unique.js"></script>
         <!-- endbuild -->
 </body>
 </html>

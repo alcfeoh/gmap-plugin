@@ -23,8 +23,9 @@ angular.module('gmapPluginApp')
         closeClick: function() {
           this.show = false;
         },
-      options: {} // define when map is ready
-    }
+      options: {}
+    };
+    $scope.markerControl = {};
     var geocoder;
 
     //$timeout(geocodeIfNeeded, 1000);
@@ -47,7 +48,17 @@ angular.module('gmapPluginApp')
       });
     }
 
+    $scope.$watch("filter.zip", function(){
+      if ($scope.filter.zip && $scope.filter.zip.length == 5){
+        geocodeAddress($scope.filter.zip + ",USA", function(loc){
+          $scope.map.getGMap().setCenter(loc);
+          $scope.map.getGMap().setZoom(13);
+        })
+      }
+    })
+
     function geocodeAddress(address, callback) {
+      geocoder = new google.maps.Geocoder();
         geocoder.geocode( { 'address': address}, function(results, status) {
           if (status == google.maps.GeocoderStatus.OK) {
             console.log("OK for "+ address);
@@ -59,9 +70,14 @@ angular.module('gmapPluginApp')
     }
 
     $scope.onClick = function(marker, eventName, model) {
-      debugger;
       $scope.window.model = model;
       $scope.window.show = true;
+    }
+
+    $scope.resetFilters = function(){
+      $scope.filter = {};
+      $scope.map.getGMap().setCenter(new google.maps.LatLng(38.270224,-97.563396));
+      $scope.map.getGMap().setZoom(4);
     }
 
     $scope.minFilterFn = function(actual, expected){
@@ -72,9 +88,18 @@ angular.module('gmapPluginApp')
       return parseInt(actual.size) <= parseInt(expected);
     }
 
+    $scope.selectMarker = function(id){
+      var marker = $scope.markerControl.getGMarkers()[id];
+      $scope.map.getGMap().setZoom(15);
+      $scope.map.getGMap().setCenter(marker.getPosition());
+      google.maps.event.trigger(marker, 'click', {
+        latLng: new google.maps.LatLng(0, 0)
+      });
+    }
+
     $timeout(function(){
       google.maps.event.trigger($scope.map.getGMap(),'resize');
-    }, 1000);
+    }, 200);
 
 
   });
