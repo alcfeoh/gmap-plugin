@@ -8,12 +8,17 @@
  * Controller of the gmapPluginApp
  */
 angular.module('gmapPluginApp')
-  .controller('MainCtrl', function ($scope, locations, $timeout) {
+  .controller('MainCtrl', function ($scope, locations, $timeout, multiFilterFilter, minFilterFilter, maxFilterFilter) {
     $scope.locations = locations;
 
     $scope.mapConf = {center: {latitude: 38.270224, longitude: -97.563396 }, zoom: 4 };
     $scope.options = {};
-    $scope.clusterOptions = {};
+    $scope.clusterOptions = { styles: [
+      {anchorText: [-3, 35], url: "http://wcregroup.com/wp-content/uploads/2015/12/cluster-marker.png",
+        height: 50, width: 120, textSize: 16, textColor: "orange",
+
+      }
+    ]};
     $scope.markerOptions ={icon: "http://wpdev.wcregroup.com/wp-content/uploads/2015/11/wcre-logo-marker-04.png"};
     $scope.map = {};
     $scope.windowOptions = {visible: false};
@@ -27,6 +32,9 @@ angular.module('gmapPluginApp')
     };
     $scope.markerControl = {};
     var geocoder;
+    $scope.defaultFilter = {show : true};
+    $scope.filter = {};
+    angular.copy($scope.defaultFilter, $scope.filter);
 
     //$timeout(geocodeIfNeeded, 1000);
 
@@ -48,14 +56,26 @@ angular.module('gmapPluginApp')
       });
     }
 
-    $scope.$watch("filter.zip", function(){
-      if ($scope.filter.zip && $scope.filter.zip.length == 5){
-        geocodeAddress($scope.filter.zip + ",USA", function(loc){
+    $scope.$watch("zipcode", function(){
+      if ($scope.zipcode && $scope.zipcode.length == 5){
+        geocodeAddress($scope.zipcode + ",USA", function(loc){
           $scope.map.getGMap().setCenter(loc);
           $scope.map.getGMap().setZoom(13);
         })
       }
     })
+
+    $scope.$watch("filter", function(){
+      if (google && $scope.locations)
+        $scope.fitBounds();
+    }, true)
+
+    $scope.getFilteredLocations = function(){
+      var res =  multiFilterFilter($scope.locations, $scope.filter);
+      res = minFilterFilter(res, 'size', $scope.minSize);
+      res = maxFilterFilter(res, 'size', $scope.maxSize);
+      return res;
+    }
 
     function geocodeAddress(address, callback) {
       geocoder = new google.maps.Geocoder();
@@ -76,16 +96,12 @@ angular.module('gmapPluginApp')
 
     $scope.resetFilters = function(){
       $scope.filter = {};
+      angular.copy($scope.defaultFilter, $scope.filter);
+      $scope.zipcode = null;
+      $scope.minSize = null;
+      $scope.maxSize = null;
       $scope.map.getGMap().setCenter(new google.maps.LatLng(38.270224,-97.563396));
       $scope.map.getGMap().setZoom(4);
-    }
-
-    $scope.minFilterFn = function(actual, expected){
-      return parseInt(actual.size) >= parseInt(expected);
-    }
-
-    $scope.maxFilterFn = function(actual, expected){
-      return parseInt(actual.size) <= parseInt(expected);
     }
 
     $scope.selectMarker = function(id){
@@ -97,9 +113,17 @@ angular.module('gmapPluginApp')
       });
     }
 
+    $scope.fitBounds = function(){
+      var bounds = new google.maps.LatLngBounds();
+      var locations = $scope.getFilteredLocations();
+      for (var l in locations){
+        var loc = locations[l];
+        bounds.extend(new google.maps.LatLng(loc.latitude, loc.longitude));
+      }
+      $scope.map.getGMap().fitBounds(bounds);
+    }
+
     $timeout(function(){
       google.maps.event.trigger($scope.map.getGMap(),'resize');
     }, 200);
-
-
   });
