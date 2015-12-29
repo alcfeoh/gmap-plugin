@@ -20,7 +20,7 @@
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
 
-  <div ng-app="gmapPluginApp" ng-controller="MainCtrl">
+  <div ng-app="gmapPluginApp" ng-controller="MainCtrl" id="mapPlugin">
     <div class="grid">
       <div class="unit one-quarter filters">
         <div>
@@ -87,7 +87,7 @@
           <p>{{location.address}}<br>
             {{location.city}}, {{location.state}}, {{location.zipcode}}
           </p>
-          <img ng-src="{{location.img}}" style="max-width:150px;max-height: 100px;" />
+          <img ng-src="{{location.img}}" style="max-width:150px;max-height: 100px; margin-top: 10px;" />
         </div>
     </div>
   </div>
@@ -114,12 +114,12 @@
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/app.js"></script>
         <script src="scripts/controllers/main.js"></script>
-        <script src="scripts/controllers/about.js"></script>
         <script src="scripts/services/locations.js"></script>
         <script src="scripts/filters/unique.js"></script>
         <script src="scripts/filters/multifilter.js"></script>
         <script src="scripts/filters/minfilter.js"></script>
         <script src="scripts/filters/maxfilter.js"></script>
+        <script src="scripts/controllers/admin.js"></script>
         <!-- endbuild -->
 </body>
 </html>
