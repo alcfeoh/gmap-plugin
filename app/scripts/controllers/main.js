@@ -100,27 +100,41 @@ angular.module('gmapPluginApp')
       $scope.zipcode = null;
       $scope.minSize = null;
       $scope.maxSize = null;
-      $scope.map.getGMap().setCenter(new google.maps.LatLng(38.270224,-97.563396));
-      $scope.map.getGMap().setZoom(4);
+      $scope.resetBounds();
     }
 
     $scope.selectMarker = function(id){
-      var marker = $scope.markerControl.getGMarkers()[id];
-      $scope.map.getGMap().setZoom(15);
-      $scope.map.getGMap().setCenter(marker.getPosition());
-      google.maps.event.trigger(marker, 'click', {
-        latLng: new google.maps.LatLng(0, 0)
-      });
+      var markers = $scope.markerControl.getGMarkers();
+      var marker;
+      for (var m in markers){
+        if (markers[m].key == id)
+          marker = markers[m];
+      }
+      if (marker){
+        $scope.map.getGMap().setZoom(15);
+        $scope.map.getGMap().setCenter(marker.getPosition());
+        google.maps.event.trigger(marker, 'click', {
+          latLng: new google.maps.LatLng(0, 0)
+        });
+      }
     }
 
     $scope.fitBounds = function(){
       var bounds = new google.maps.LatLngBounds();
       var locations = $scope.getFilteredLocations();
-      for (var l in locations){
-        var loc = locations[l];
-        bounds.extend(new google.maps.LatLng(loc.latitude, loc.longitude));
-      }
-      $scope.map.getGMap().fitBounds(bounds);
+      if (locations.length > 0){
+        for (var l in locations){
+          var loc = locations[l];
+          bounds.extend(new google.maps.LatLng(loc.latitude, loc.longitude));
+        }
+        $scope.map.getGMap().fitBounds(bounds);
+      } else
+        $scope.resetBounds();
+    }
+
+    $scope.resetBounds = function(){
+      $scope.map.getGMap().setCenter(new google.maps.LatLng(38.270224,-97.563396));
+      $scope.map.getGMap().setZoom(4);
     }
 
     $timeout(function(){
