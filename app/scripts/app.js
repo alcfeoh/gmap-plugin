@@ -18,4 +18,5 @@ angular
     'ngTouch',
     'firebase',
     'uiGmapgoogle-maps'
-  ]);
+  ])
+;

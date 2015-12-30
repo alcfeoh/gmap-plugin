@@ -20,36 +20,37 @@
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
 
-  <div ng-app="gmapPluginApp" ng-controller="MainCtrl" id="mapPlugin">
+  <div ng-app="gmapPluginApp" ng-controller="MainCtrl" id="mapPlugin" class="ng-cloak">
     <div class="grid">
       <div class="unit one-quarter filters">
-        <div>
+        <h3>Filter Results</h3>
+        <div ng-if="! defaultFilter.type">
           Type:
           <select ng-options="location.type as location.type for location in locations | unique: 'type' | orderBy: 'type'" ng-model="filter.type">
             <option value="">--- Select type ---</option>
           </select>
         </div>
-        <div>
+        <div ng-if="! defaultFilter.offer">
           Offer:
           <select ng-options="location.offer as location.offer for location in locations | unique: 'offer'" ng-model="filter.offer">
             <option value="">--- Select offer type ---</option>
           </select>
         </div>
-        <div>
+        <div ng-if="! defaultFilter.city">
           City:
           <input type="text" ng-model="filter.city" placeholder="Type city name here"></input>
         </div>
-        <div>
+        <div ng-if="! defaultFilter.zipcode">
           Zipcode:
           <input type="text" ng-model="zipcode" placeholder="Type zipcode here"></input>
         </div>
-        <div>
+        <div ng-if="! defaultFilter.state">
           State:
           <select ng-options="location.state as location.state for location in locations | unique: 'state' | orderBy: 'state'" ng-model="filter.state">
             <option value="">--- Select state ---</option>
           </select>
         </div>
-        <div>
+        <div ng-if="! defaultFilter.minSize">
           Size:
           <input type="text" ng-model="minSize" placeholder="Min" class="sqft"></input>
           sqft and <input type="text" ng-model="maxSize" placeholder="Max" class="sqft"></input> sqft
@@ -80,16 +81,21 @@
         </div>
       </div>
     </div>
-    <div id="locationList" style="overflow-x:auto;overflow-y:hidden;height:250px;padding:5px;">
-        <div style="display: table-cell; min-width: 200px;"
-             ng-repeat="location in getFilteredLocations()">
-          <p><a href="#" ng-click="selectMarker(location.$id)" >{{location.name}}</a></p>
-          <img ng-src="{{location.img}}" style="max-height: 120px; " />
-          <p>{{location.address}}<br>
-            {{location.city}}, {{location.state}}, {{location.zipcode}}
-          </p>
+    <div class="grid">
+      <div class="unit one-quarter">
+        <h3>Search Results</h3>
+      </div>
+      <div id="locationList" class="unit three-quarters" style="overflow-x:auto;overflow-y:hidden;height:250px;padding:5px;">
+          <div style="display: table-cell; min-width: 200px;"
+               ng-repeat="location in getFilteredLocations()">
+            <p><a href="#" ng-click="selectMarker(location.$id)" >{{location.name}}</a></p>
+            <img ng-src="{{location.img}}" style="max-height: 120px; " />
+            <p>{{location.address}}<br>
+              {{location.city}}, {{location.state}}, {{location.zipcode}}
+            </p>
 
-        </div>
+          </div>
+      </div>
     </div>
   </div>
 
@@ -122,5 +128,7 @@
         <script src="scripts/filters/maxfilter.js"></script>
         <script src="scripts/controllers/admin.js"></script>
         <!-- endbuild -->
+
+        <script src="scripts/services/config.js"></script>
 </body>
 </html>
