@@ -8,7 +8,7 @@
  * Controller of the gmapPluginApp
  */
 angular.module('gmapPluginApp')
-  .controller('MainCtrl', function ($scope, locations, $timeout, multiFilterFilter, minFilterFilter, maxFilterFilter, Config) {
+  .controller('MainCtrl', function ($scope, locations, $timeout, multiFilterFilter, minFilterFilter, maxFilterFilter, Config, uiGmapGoogleMapApi) {
     $scope.locations = locations;
 
     $scope.mapConf = {center: {latitude: 38.270224, longitude: -97.563396 }, zoom: 4 };
@@ -21,15 +21,19 @@ angular.module('gmapPluginApp')
     ]};
     $scope.markerOptions ={icon: "http://wpdev.wcregroup.com/wp-content/uploads/2015/11/wcre-logo-marker-04.png"};
     $scope.map = {};
-    $scope.windowOptions = {visible: false};
-    $scope.window = {
-      marker: {},
-      show: false,
+    uiGmapGoogleMapApi.then(function(maps) {
+      $scope.window = {
+        marker: {},
+        show: false,
         closeClick: function() {
           this.show = false;
         },
-      options: {}
-    };
+        options: {
+          pixelOffset: new google.maps.Size(0, -40)
+        }
+      };
+    });
+
     $scope.markerControl = {};
     var geocoder;
     $scope.defaultFilter = Config.defaultFilter;
@@ -69,6 +73,12 @@ angular.module('gmapPluginApp')
       if (google && $scope.locations)
         $scope.fitBounds();
     }, true)
+
+    $scope.zoomChanged = function(map, event, args){
+      console.log("Zoom changed to "+ map.getZoom());
+      if (map.getZoom() <= 10)
+        $scope.window.show = false;
+    }
 
     $scope.getFilteredLocations = function(){
       var res =  multiFilterFilter($scope.locations, $scope.filter);

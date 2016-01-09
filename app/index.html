@@ -24,45 +24,79 @@
     <div class="grid">
       <div class="unit one-quarter filters">
         <h3>Filter Results</h3>
-        <div ng-if="! defaultFilter.type">
-          Type:
-          <select ng-options="location.type as location.type for location in locations | unique: 'type' | orderBy: 'type'" ng-model="filter.type">
-            <option value="">--- Select type ---</option>
-          </select>
+        <div ng-if="! defaultFilter.offer" class="box">
+          <h4>OFFER TYPE</h4>
+          <div class="grid">
+            <div class="unit half">
+              <div ng-repeat="location in locations | unique: 'offer'"  ng-if="$even && location.offer != ''">
+                <input type="radio" ng-model="filter.offer" name="{{location.offer}}" value="{{location.offer}}"/>
+                <label for="{{location.offer}}" >{{location.offer}}</label>
+              </div>
+            </div>
+            <div class="unit half">
+              <div ng-repeat="location in locations | unique: 'offer'"  ng-if="$odd && location.offer != ''">
+                <input type="radio" ng-model="filter.offer" name="{{location.offer}}" value="{{location.offer}}" />
+                <label for="{{location.offer}}">{{location.offer}}</label>
+              </div>
+            </div>
+          </div>
         </div>
-        <div ng-if="! defaultFilter.offer">
-          Offer:
-          <select ng-options="location.offer as location.offer for location in locations | unique: 'offer'" ng-model="filter.offer">
-            <option value="">--- Select offer type ---</option>
-          </select>
+        <div ng-if="! defaultFilter.type" class="box">
+          <h4>PROPERTY TYPE</h4>
+          <div class="grid">
+            <div class="unit half">
+              <div ng-repeat="location in locations | unique: 'type' | orderBy: 'type'"  ng-if="$even">
+                <input type="radio" ng-model="filter.type" name="{{location.type}}" value="{{location.type}}"/>
+                <label for="{{location.type}}" >{{location.type}}</label>
+              </div>
+            </div>
+            <div class="unit half">
+              <div ng-repeat="location in locations | unique: 'type' | orderBy: 'type'"  ng-if="$odd">
+                <input type="radio" ng-model="filter.type" name="{{location.type}}" value="{{location.type}}" />
+                <label for="{{location.type}}">{{location.type}}</label>
+              </div>
+            </div>
+          </div>
         </div>
-        <div ng-if="! defaultFilter.city">
-          City:
-          <input type="text" ng-model="filter.city" placeholder="Type city name here"></input>
+
+        <div ng-if="! defaultFilter.state" class="grid singleFilter">
+          <div class="unit one-quarter">State:</div>
+          <div class="unit three-quarters">
+            <select ng-options="location.state as location.state for location in locations | unique: 'state' | orderBy: 'state'" ng-model="filter.state">
+              <option value="">--- Select state ---</option>
+            </select>
+          </div>
         </div>
-        <div ng-if="! defaultFilter.zipcode">
-          Zipcode:
-          <input type="text" ng-model="zipcode" placeholder="Type zipcode here"></input>
+        <div ng-if="! defaultFilter.city" class="grid singleFilter">
+          <div class="unit one-quarter">City:</div>
+          <div class="unit three-quarters">
+            <select ng-options="location.city as location.city for location in locations | unique: 'city' | orderBy: 'city' | filter : {state: filter.state}" ng-model="filter.city">
+              <option value="">--- Select city ---</option>
+            </select>
+          </div>
         </div>
-        <div ng-if="! defaultFilter.state">
-          State:
-          <select ng-options="location.state as location.state for location in locations | unique: 'state' | orderBy: 'state'" ng-model="filter.state">
-            <option value="">--- Select state ---</option>
-          </select>
+        <div ng-if="! defaultFilter.zipcode" class="grid singleFilter">
+          <div class="unit one-quarter">Zipcode:</div>
+          <div class="unit three-quarters">
+            <input type="text" ng-model="zipcode" placeholder="Type zipcode here"></input>
+          </div>
         </div>
-        <div ng-if="! defaultFilter.minSize">
-          Size:
-          <input type="text" ng-model="minSize" placeholder="Min" class="sqft"></input>
-          sqft and <input type="text" ng-model="maxSize" placeholder="Max" class="sqft"></input> sqft
+
+        <div ng-if="! defaultFilter.minSize" class="grid singleFilter">
+          <div class="unit one-quarter">Size:</div>
+          <div class="unit three-quarters">
+            <input type="text" ng-model="minSize" placeholder="Min" class="sqft"></input>
+            sqft and <input type="text" ng-model="maxSize" placeholder="Max" class="sqft"></input> sqft
+          </div>
         </div>
-        <div>
+        <div class="reset">
           <button ng-click="resetFilters()">Reset filters</button>
         </div>
       </div>
       <div class="unit three-quarters">
-        <div id="map_canvas" style="height: 500px">
+        <div id="map_canvas" style="height: 490px">
 
-          <ui-gmap-google-map center="mapConf.center" zoom="mapConf.zoom" control="map">
+          <ui-gmap-google-map center="mapConf.center" zoom="mapConf.zoom" control="map" events="{'zoom_changed' : zoomChanged }">
             <ui-gmap-window show="window.show" coords="window.model" options="window.options" closeclick="window.closeClick()" ng-if="window.model.name">
               <div>
                 <p><a target="_blank" ng-href="{{window.model.url}}">{{window.model.name}}</a></p>

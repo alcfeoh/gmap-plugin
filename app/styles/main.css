@@ -21,14 +21,11 @@ html, body, #map_canvas {
   left: 0;
 }
 
-.filters div{
-  margin-bottom: 10px;
-}
-
-.filters input {
+.filters input[type='text'] {
   width: 180px;
   max-width: 100%;
 }
 .filters input.sqft {
   width: 40px;
 }
+
