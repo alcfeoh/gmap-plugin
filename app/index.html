@@ -119,7 +119,7 @@
       <div class="unit one-quarter">
         <h3>Search Results</h3>
       </div>
-      <div id="locationList" class="unit three-quarters" style="overflow-x:auto;overflow-y:hidden;height:250px;padding:5px;">
+<!--      <div id="locationList" class="unit three-quarters" style="overflow-x:auto;overflow-y:hidden;height:250px;padding:5px;">
           <div style="display: table-cell; min-width: 200px;"
                ng-repeat="location in getFilteredLocations()">
             <p><a href="#" ng-click="selectMarker(location.$id)" >{{location.name}}</a></p>
@@ -129,6 +129,35 @@
             </p>
 
           </div>
+      </div>-->
+      <div id="locationList" class="unit three-quarters">
+        <div class="grid listHeader">
+          <div class="unit two-fifths">Description</div>
+          <div class="unit one-fifth" >Type</div>
+          <div class="unit one-fifth" >Offer</div>
+          <div class="unit one-fifth">Size</div>
+        </div>
+        <hr/>
+        <div class="listContent">
+          <div ng-repeat="location in getFilteredLocations()" >
+            <div class="grid">
+              <div class="unit two-fifths">
+                <div class="grid" style="max-height: 120px; ">
+                  <div class="unit half"><img ng-src="{{location.img}}" style="max-height: 120px; " /></div>
+                  <div class="unit half">
+                    <a href="#" ng-click="selectMarker(location.$id)" >{{location.name}}</a><br>
+                    {{location.address}}<br>
+                    {{location.city}}, {{location.state}}, {{location.zipcode}}
+                  </div>
+                </div>
+              </div>
+                <div class="unit one-fifth" ng-bind="location.type"></div>
+                <div class="unit one-fifth" ng-bind="location.offer"></div>
+                <div class="unit one-fifth">{{location.size | number}} sqft</div>
+            </div>
+            <hr/>
+          </div>
+        </div>
       </div>
     </div>
   </div>

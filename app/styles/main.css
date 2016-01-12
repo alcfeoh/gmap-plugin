@@ -29,3 +29,8 @@ html, body, #map_canvas {
   width: 40px;
 }
 
+#listContent {
+  max-height: 250px;
+  overflow: auto;
+}
+
