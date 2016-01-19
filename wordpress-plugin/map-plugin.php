@@ -2,7 +2,7 @@
 /*
 Plugin Name: Map Plugin
 Description: Developed for WCRE
-Version: 0.99i
+Version: 0.99l
 Author: Alain Chautard
 Author URI: http://www.interstate21.com
 */
@@ -25,9 +25,9 @@ function map_admin_page_function() {
   ?>
     <script src="http://google-maps-utility-library-v3.googlecode.com/svn/tags/markerclustererplus/2.0.16/src/markerclusterer_packed.js"></script>
     <script type="text/javascript" src="<? echo plugins_url( 'dist/scripts/vendor.cffe057a.js' , __FILE__ ) ?>"></script>
-    <script type="text/javascript" src="<? echo plugins_url( 'dist/scripts/scripts.24180941.js' , __FILE__ ) ?>"></script>
+    <script type="text/javascript" src="<? echo plugins_url( 'dist/scripts/scripts.95882e19.js' , __FILE__ ) ?>"></script>
     <link rel="stylesheet" href="<? echo plugins_url( 'dist/styles/vendor.0eb12b9f.css' , __FILE__ ) ?>">
-    <link rel="stylesheet" href="<? echo plugins_url( 'dist/styles/main.61dc95c3.css' , __FILE__ ) ?>">
+    <link rel="stylesheet" href="<? echo plugins_url( 'dist/styles/main.e29b3961.css' , __FILE__ ) ?>">
   <?
   echo file_get_contents(plugins_url( 'dist/admin.html' , __FILE__ ));
 }
@@ -43,9 +43,9 @@ function render_map($atts ) {
   ?>
     <script src="http://google-maps-utility-library-v3.googlecode.com/svn/tags/markerclustererplus/2.0.16/src/markerclusterer_packed.js"></script>
     <script type="text/javascript" src="<? echo plugins_url( 'dist/scripts/vendor.cffe057a.js' , __FILE__ ) ?>"></script>
-    <script type="text/javascript" src="<? echo plugins_url( 'dist/scripts/scripts.24180941.js' , __FILE__ ) ?>"></script>
+    <script type="text/javascript" src="<? echo plugins_url( 'dist/scripts/scripts.95882e19.js' , __FILE__ ) ?>"></script>
     <link rel="stylesheet" href="<? echo plugins_url( 'dist/styles/vendor.0eb12b9f.css' , __FILE__ ) ?>">
-    <link rel="stylesheet" href="<? echo plugins_url( 'dist/styles/main.61dc95c3.css' , __FILE__ ) ?>">
+    <link rel="stylesheet" href="<? echo plugins_url( 'dist/styles/main.e29b3961.css' , __FILE__ ) ?>">
     <script>
       angular.module('gmapPluginApp').constant("Config", {
             "defaultFilter": <? echo $params['filter'] ?>

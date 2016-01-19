@@ -20,95 +20,96 @@
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
 
-  <div ng-app="gmapPluginApp" ng-controller="MainCtrl" id="mapPlugin" class="ng-cloak">
+  <div ng-app="gmapPluginApp" ng-controller="MainCtrl as vm" id="mapPlugin" class="ng-cloak">
     <div class="grid">
       <div class="unit one-quarter filters">
         <h3>Filter Results</h3>
-        <div ng-if="! defaultFilter.offer" class="box">
+        <div class="box">
           <h4>OFFER TYPE</h4>
           <div class="grid">
             <div class="unit half">
-              <div ng-repeat="location in locations | unique: 'offer'"  ng-if="$even && location.offer != ''">
-                <input type="radio" ng-model="filter.offer" name="{{location.offer}}" value="{{location.offer}}"/>
+              <div ng-repeat="location in vm.locations | unique: 'offer'"  ng-if="(location.offer == vm.defaultFilter.offer) || ($even && location.offer != '' && ! vm.defaultFilter.offer)  ">
+                <input type="radio" ng-model="vm.filter.offer" name="{{location.offer}}" value="{{location.offer}}"/>
                 <label for="{{location.offer}}" >{{location.offer}}</label>
               </div>
             </div>
-            <div class="unit half">
-              <div ng-repeat="location in locations | unique: 'offer'"  ng-if="$odd && location.offer != ''">
-                <input type="radio" ng-model="filter.offer" name="{{location.offer}}" value="{{location.offer}}" />
+            <div class="unit half" ng-if="! vm.defaultFilter.offer">
+              <div ng-repeat="location in vm.locations | unique: 'offer'"  ng-if="$odd && location.offer != '' ">
+                <input type="radio" ng-model="vm.filter.offer" name="{{location.offer}}" value="{{location.offer}}" />
                 <label for="{{location.offer}}">{{location.offer}}</label>
               </div>
             </div>
           </div>
         </div>
-        <div ng-if="! defaultFilter.type" class="box">
+        <div ng-if="! vm.defaultFilter.type" class="box">
           <h4>PROPERTY TYPE</h4>
           <div class="grid">
             <div class="unit half">
-              <div ng-repeat="location in locations | unique: 'type' | orderBy: 'type'"  ng-if="$even">
-                <input type="radio" ng-model="filter.type" name="{{location.type}}" value="{{location.type}}"/>
+              <div ng-repeat="location in vm.locations | unique: 'type' | orderBy: 'type'"  ng-if="$even">
+                <input type="radio" ng-model="vm.filter.type" name="{{location.type}}" value="{{location.type}}"/>
                 <label for="{{location.type}}" >{{location.type}}</label>
               </div>
             </div>
             <div class="unit half">
-              <div ng-repeat="location in locations | unique: 'type' | orderBy: 'type'"  ng-if="$odd">
-                <input type="radio" ng-model="filter.type" name="{{location.type}}" value="{{location.type}}" />
+              <div ng-repeat="location in vm.locations | unique: 'type' | orderBy: 'type'"  ng-if="$odd">
+                <input type="radio" ng-model="vm.filter.type" name="{{location.type}}" value="{{location.type}}" />
                 <label for="{{location.type}}">{{location.type}}</label>
               </div>
             </div>
           </div>
         </div>
 
-        <div ng-if="! defaultFilter.state" class="grid singleFilter">
+        <div ng-if="! vm.defaultFilter.state" class="grid singleFilter">
           <div class="unit one-quarter">State:</div>
           <div class="unit three-quarters">
-            <select ng-options="location.state as location.state for location in locations | unique: 'state' | orderBy: 'state'" ng-model="filter.state">
+            <select ng-options="location.state as location.state for location in vm.locations | unique: 'state' | orderBy: 'state'" ng-model="vm.filter.state">
               <option value="">--- Select state ---</option>
             </select>
           </div>
         </div>
-        <div ng-if="! defaultFilter.city" class="grid singleFilter">
+        <div ng-if="! vm.defaultFilter.city" class="grid singleFilter">
           <div class="unit one-quarter">City:</div>
           <div class="unit three-quarters">
-            <select ng-options="location.city as location.city for location in locations | unique: 'city' | orderBy: 'city' | filter : {state: filter.state}" ng-model="filter.city">
+            <select ng-options="location.city as location.city for location in vm.locations | unique: 'city' | orderBy: 'city' | filter : {state: vm.filter.state}" ng-model="vm.filter.city">
               <option value="">--- Select city ---</option>
             </select>
           </div>
         </div>
-        <div ng-if="! defaultFilter.zipcode" class="grid singleFilter">
+        <div ng-if="! vm.defaultFilter.zipcode" class="grid singleFilter">
           <div class="unit one-quarter">Zipcode:</div>
           <div class="unit three-quarters">
-            <input type="text" ng-model="zipcode" placeholder="Type zipcode here"></input>
+            <input type="text" ng-model="vm.zipcode" placeholder="Type zipcode here"></input>
           </div>
         </div>
 
-        <div ng-if="! defaultFilter.minSize" class="grid singleFilter">
+        <div ng-if="! vm.defaultFilter.minSize" class="grid singleFilter">
           <div class="unit one-quarter">Size:</div>
           <div class="unit three-quarters">
-            <input type="text" ng-model="minSize" placeholder="Min" class="sqft"></input>
-            sqft and <input type="text" ng-model="maxSize" placeholder="Max" class="sqft"></input> sqft
+            <input type="text" ng-model="vm.minSize" placeholder="Min" class="sqft"></input>
+            sqft and <input type="text" ng-model="vm.maxSize" placeholder="Max" class="sqft"></input> sqft
           </div>
         </div>
         <div class="reset">
-          <button ng-click="resetFilters()">Reset filters</button>
+          <button ng-click="vm.applyFilters()">Search</button>
+          <button ng-click="vm.resetFilters()">Reset filters</button>
         </div>
       </div>
       <div class="unit three-quarters">
-        <div id="map_canvas" style="height: 490px">
+        <div id="map_canvas" style="height: 463px">
 
-          <ui-gmap-google-map center="mapConf.center" zoom="mapConf.zoom" control="map" events="{'zoom_changed' : zoomChanged }">
-            <ui-gmap-window show="window.show" coords="window.model" options="window.options" closeclick="window.closeClick()" ng-if="window.model.name">
+          <ui-gmap-google-map center="vm.mapConf.center" zoom="vm.mapConf.zoom" control="vm.map" events="{'zoom_changed' : zoomChanged }">
+            <ui-gmap-window show="vm.window.show" coords="vm.window.model" options="vm.window.options" closeclick="vm.window.closeClick()" ng-if="vm.window.model.name">
               <div>
-                <p><a target="_blank" ng-href="{{window.model.url}}">{{window.model.name}}</a></p>
-                <p>{{window.model.address}}<br>
-                  {{window.model.city}}, {{window.model.state}}, {{window.model.zipcode}}
+                <p><a target="_blank" ng-href="{{vm.window.model.url}}">{{vm.window.model.name}}</a></p>
+                <p>{{vm.window.model.address}}<br>
+                  {{vm.window.model.city}}, {{vm.window.model.state}}, {{vm.window.model.zipcode}}
                 </p>
-                <img ng-src="{{window.model.img}}" style="max-width:150px;max-height: 100px;" />
+                <img ng-src="{{vm.window.model.img}}" style="max-width:150px;max-height: 100px;" />
               </div>
             </ui-gmap-window>
-            <ui-gmap-markers models="getFilteredLocations()"
-                             coords="'self'" idkey="'$id'"  type="'cluster'" typeOptions="clusterOptions"
-                             options="markerOptions" click="onClick" control="markerControl">
+            <ui-gmap-markers models="vm.filteredLocations"
+                             coords="'self'" idkey="'$id'"  type="'cluster'" typeOptions="vm.clusterOptions"
+                             options="vm.markerOptions" click="vm.onClick" control="vm.markerControl">
             </ui-gmap-markers>
 
           </ui-gmap-google-map>
@@ -139,7 +140,7 @@
         </div>
         <hr/>
         <div class="listContent">
-          <div ng-repeat="location in getFilteredLocations()" >
+          <div ng-repeat="location in vm.filteredLocations" >
             <div class="grid">
               <div class="unit two-fifths">
                 <div class="grid" style="max-height: 120px; ">
