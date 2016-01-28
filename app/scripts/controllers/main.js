@@ -45,13 +45,12 @@ angular.module('gmapPluginApp')
           vm.applyFilters();
       }
 
-      $scope.$watch("vm.filteredLocations", function(){
-          vm.fitBounds();
-      }, true);
-
       vm.locations.$loaded(
         function() {
           vm.filteredLocations = vm.getFilteredLocations();
+          $scope.$watch("vm.filteredLocations", function(){
+            vm.fitBounds();
+          }, true);
         }
       );
 

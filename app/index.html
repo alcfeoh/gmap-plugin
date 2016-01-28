@@ -28,13 +28,13 @@
           <h4>OFFER TYPE</h4>
           <div class="grid">
             <div class="unit half">
-              <div ng-repeat="location in vm.locations | unique: 'offer'"  ng-if="(location.offer == vm.defaultFilter.offer) || ($even && location.offer != '' && ! vm.defaultFilter.offer)  ">
+              <div ng-repeat="location in vm.locations | unique: 'offer'"  ng-if="(location.offer && (location.offer == vm.defaultFilter.offer)) || ($even && location.offer != '' && location.offer  && ! vm.defaultFilter.offer)  ">
                 <input type="radio" ng-model="vm.filter.offer" name="{{location.offer}}" value="{{location.offer}}"/>
                 <label for="{{location.offer}}" >{{location.offer}}</label>
               </div>
             </div>
             <div class="unit half" ng-if="! vm.defaultFilter.offer">
-              <div ng-repeat="location in vm.locations | unique: 'offer'"  ng-if="$odd && location.offer != '' ">
+              <div ng-repeat="location in vm.locations | unique: 'offer'"  ng-if="(location.offer && (location.offer == vm.defaultFilter.offer)) ||($odd && location.offer != '' && location.offer  && ! vm.defaultFilter.offer) ">
                 <input type="radio" ng-model="vm.filter.offer" name="{{location.offer}}" value="{{location.offer}}" />
                 <label for="{{location.offer}}">{{location.offer}}</label>
               </div>
@@ -146,7 +146,7 @@
                 <div class="grid" style="max-height: 120px; ">
                   <div class="unit half"><img ng-src="{{location.img}}" style="max-height: 120px; " /></div>
                   <div class="unit half">
-                    <a href="#" ng-click="selectMarker(location.$id)" >{{location.name}}</a><br>
+                    <a href="#" ng-click="vm.selectMarker(location.$id)" >{{location.name}}</a><br>
                     {{location.address}}<br>
                     {{location.city}}, {{location.state}}, {{location.zipcode}}
                   </div>
