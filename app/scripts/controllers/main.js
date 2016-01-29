@@ -123,6 +123,7 @@ angular.module('gmapPluginApp')
 
     vm.resetFilters = function(){
       vm.filter = {};
+      vm.window.show = false;
       angular.copy(vm.defaultFilter, vm.filter);
       angular.copy(vm.defaultFilter, vm.appliedFilter);
       vm.filteredLocations = vm.getFilteredLocations();
@@ -167,8 +168,9 @@ angular.module('gmapPluginApp')
     }
 
     vm.resetBounds = function(){
-      vm.map.getGMap().setCenter(new google.maps.LatLng(38.270224,-97.563396));
-      vm.map.getGMap().setZoom(4);
+        vm.map.getGMap().setCenter(new google.maps.LatLng(38.270224,-97.563396));
+        if (vm.map.getGMap().getZoom() != 4)
+          vm.map.getGMap().setZoom(4);
     }
 
   });
