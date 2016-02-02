@@ -8,21 +8,16 @@
  * Controller of the gmapPluginApp
  */
 angular.module('gmapPluginApp')
-  .controller('MainCtrl', function ($scope, locations, $timeout, multiFilterFilter, minFilterFilter, maxFilterFilter, Config, uiGmapGoogleMapApi) {
+  .controller('MainCtrl', function ($scope, locations, clientConfig, $timeout, multiFilterFilter, minFilterFilter, maxFilterFilter, Config, uiGmapGoogleMapApi) {
 
     var vm = this;
 
     vm.locations = locations;
+    vm.clientConfig = clientConfig;
 
     vm.mapConf = {center: {latitude: 38.270224, longitude: -97.563396 }, zoom: 4 };
     vm.options = {};
-    vm.clusterOptions = { styles: [
-      {anchorText: [-3, 35], url: "http://wcregroup.com/wp-content/uploads/2015/12/cluster-marker.png",
-        height: 50, width: 120, textSize: 16, textColor: "orange",
 
-      }
-    ]};
-    vm.markerOptions ={icon: "http://wpdev.wcregroup.com/wp-content/uploads/2015/11/wcre-logo-marker-04.png"};
     vm.map = {};
     vm.markerControl = {};
     var geocoder;
@@ -53,6 +48,13 @@ angular.module('gmapPluginApp')
           }, true);
         }
       );
+
+      vm.clientConfig.$loaded(
+        function(){
+          vm.markerOptions = clientConfig.markerOptions;
+          vm.clusterOptions = clientConfig.clusterOptions;
+        }
+      )
 
       $timeout(function(){
         google.maps.event.trigger(vm.map.getGMap(),'resize');

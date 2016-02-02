@@ -109,7 +109,7 @@
             </ui-gmap-window>
             <ui-gmap-markers models="vm.filteredLocations"
                              coords="'self'" idkey="'$id'"  type="'cluster'" typeOptions="vm.clusterOptions"
-                             options="vm.markerOptions" click="vm.onClick" control="vm.markerControl">
+                             options="vm.markerOptions" click="vm.onClick" control="vm.markerControl" icon="'icon'" >
             </ui-gmap-markers>
 
           </ui-gmap-google-map>
@@ -191,6 +191,7 @@
         <script src="scripts/filters/minfilter.js"></script>
         <script src="scripts/filters/maxfilter.js"></script>
         <script src="scripts/controllers/admin.js"></script>
+        <script src="scripts/services/clientconfig.js"></script>
         <!-- endbuild -->
 
         <script src="scripts/services/config.js"></script>
